@@ -14,6 +14,16 @@ const emailReducer = (state, action) => {
   return { value: '', isValid: false };
 }
 
+const passwordReducer = (state, action) => {
+  if (action.type === 'USER_INPUT') {
+    return { value: action.val, isValid: action.val.trim().length>6 };
+  }
+  if (action.type === 'INPUT_BLUR') {
+    return { value: state.value, isValid: state.value.trim().length>6 };
+  }
+  return { value: '', isValid: false };
+}
+
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState('');
   // const [emailIsValid, setEmailIsValid] = useState();
@@ -22,7 +32,7 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: false })
-  const [passWordState, dispatchPassword] = useReducer(emailReducer, { value: '', isValid: false })
+  const [passWordState, dispatchPassword] = useReducer(passwordReducer, { value: '', isValid: false })
 
   useEffect(() => {
     console.log('EFFECT RUNNING');
