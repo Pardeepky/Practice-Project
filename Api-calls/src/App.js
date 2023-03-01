@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
@@ -17,7 +17,7 @@ function App() {
     setTimeout(fetchMovieHandler, 5000 * retryCount);
   };
 
-  const fetchMovieHandler = async () => {
+  const fetchMovieHandler =  useCallback(async() => {
     try {
       setIsLoading(true);
       setError(null);
@@ -44,11 +44,11 @@ function App() {
     } finally {
       setIsLoading(false)
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchMovieHandler();
-  }, [])
+  }, [fetchMovieHandler])
 
   return (
     <React.Fragment>
