@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
+import axios from 'axios';
 import MoviesList from './components/MoviesList';
 import './App.css';
 import Loader from './components/Loader';
@@ -18,26 +18,17 @@ function App() {
     setTimeout(fetchMovieHandler, 5000 * retryCount);
   };
 
-  const fetchMovieHandler =  useCallback(async() => {
+  const fetchMovieHandler = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const res = await fetch("https://swapi.dev/api/films")
+      const res = await axios.get("https://crudcrud.com/api/dd4a533c0f4e4729bf7f6e26bf19011c/movies")
+      console.log(res);
 
-      if (!res.ok) {
+      if (!res.status) {
         throw new Error("Something went wrong ....Retrying");
       }
-
-      const data = await res.json()
-      const transformedMovies = data.results.map(movieData => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseDate: movieData.release_date
-        }
-      })
-      setMovies(transformedMovies);
+      setMovies(res.data);
     } catch (err) {
       console.log(err)
       setError(err.message);
@@ -51,8 +42,22 @@ function App() {
     fetchMovieHandler();
   }, [fetchMovieHandler])
 
-  function addMovieHandler(movie) {
-    console.log(movie);
+  const addMovieHandler = async (movie) => {
+    try {
+      await axios.post('https://crudcrud.com/api/dd4a533c0f4e4729bf7f6e26bf19011c/movies', movie)
+      fetchMovieHandler();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const deleteMovieHandler = async (id) => {
+    try {
+      await axios.delete(`https://crudcrud.com/api/dd4a533c0f4e4729bf7f6e26bf19011c/movies/${id}`)
+      fetchMovieHandler();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -64,7 +69,7 @@ function App() {
         <button onClick={fetchMovieHandler}>Fetch Movies</button>
       </section>
       <section>
-        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
+        {!isLoading && movies.length > 0 && <MoviesList movies={movies} deleteMovieHandler={deleteMovieHandler}/>}
         {!isLoading && movies.length === 0 && !error && <h3>Found no movies</h3>}
         {!isLoading && error && !retrying && <h3>{error}</h3>}
         {!isLoading && error && retrying && (
