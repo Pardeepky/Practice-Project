@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthContext from './Auth-Context'
 
 const AuthProvider = (props) => {
@@ -7,10 +7,12 @@ const AuthProvider = (props) => {
   const userIsLoggedIn = !!token;
 
   const loginHandler = (token) => {
+    localStorage.setItem('token', JSON.stringify(token));
     setToken(token);
   }
 
   const logoutHandler = () => {
+    localStorage.removeItem('token')
     setToken(null);
   }
 
@@ -20,6 +22,11 @@ const AuthProvider = (props) => {
     login: loginHandler,
     logout: logoutHandler
   }
+
+  useEffect(()=>{
+    const token = localStorage.getItem('token')
+    setToken(token)
+  },[])
   return (
     <AuthContext.Provider value={authContext}>
       {props.children}
