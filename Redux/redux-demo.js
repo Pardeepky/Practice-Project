@@ -11,7 +11,7 @@ const counterReducer = (state = { counter: 0 }, action) => {
             couner: state.counter - 5
         }
     }
-
+    return state;
 }
 
 const store = redux.createStore(counterReducer);
@@ -23,10 +23,10 @@ const counterSubscriber = () => {
 
 store.subscribe(counterSubscriber);
 
-store.dispatch({ type: 'increment' });
-store.dispatch({ type: 'increment' });
-store.dispatch({ type: 'increment' });
-store.dispatch({ type: 'increment' });
-store.dispatch({ type: 'increment' });
+// store.dispatch({ type: 'increment' });
+// store.dispatch({ type: 'increment' });
+// store.dispatch({ type: 'increment' });
+// store.dispatch({ type: 'increment' });
+// store.dispatch({ type: 'increment' });
 
-store.dispatch({ type: 'decrement' });
+// store.dispatch({ type: 'decrement' });
